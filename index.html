@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>কবিতাঘর — কবিতা, উক্তি ও PDF স্টুডিও</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="wordmark">কবিতাঘর <span class="tag">STUDIO</span></div>
+    <div class="tools-nav">
+      <button data-tool="poster" class="active">কবিতা / উক্তি</button>
+      <button data-tool="textpdf">Text → PDF</button>
+      <button data-tool="imgpdf">Image → PDF</button>
+    </div>
+    <div class="count-pill" id="templateCount"></div>
+  </header>
+
+  <aside class="sidebar" id="sidebar-categories">
+    <h3>ক্যাটাগরি</h3>
+    <div class="cat-list" id="catList"></div>
+  </aside>
+
+  <main class="stage">
+
+    <!-- ===================== POSTER / KOBITA TOOL ===================== -->
+    <section class="panel active" id="panel-poster">
+
+      <div id="gridView">
+        <div class="grid-toolbar">
+          <input type="text" id="tplSearch" placeholder="ডেকোরেশন বা ফ্রেম খুঁজুন...">
+          <button class="pill" id="shuffleBtn">🎲 এলোমেলো (Surprise me)</button>
+        </div>
+        <div class="tpl-grid" id="tplGrid"></div>
+      </div>
+
+      <div id="editorView" style="display:none;">
+        <div class="grid-toolbar">
+          <button class="pill" id="backToGrid">← টেমপ্লেট তালিকায় ফিরে যান</button>
+          <span id="editorTitle" style="font-size:13px;opacity:0.7;"></span>
+        </div>
+        <div class="editor-layout">
+          <div class="controls">
+            <h4>রঙের প্যালেট</h4>
+            <div class="swatches" id="paletteSwatches"></div>
+
+            <div class="field" style="margin-top:16px;">
+              <h4>ফন্ট</h4>
+              <select id="fontSelect"></select>
+            </div>
+
+            <div class="field">
+              <h4>ফন্ট সাইজ</h4>
+              <input type="range" id="fontSizeRange" min="16" max="48" value="28" style="width:100%;">
+            </div>
+
+            <div class="field">
+              <h4>টিপস</h4>
+              <p style="font-size:12px;opacity:0.6;line-height:1.6;">
+                কবিতা ও কবির নাম সরাসরি পোস্টারে ক্লিক করে সম্পাদনা করুন।
+              </p>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn" id="downloadPng">PNG ডাউনলোড</button>
+              <button class="btn gold" id="downloadPdf">PDF ডাউনলোড</button>
+            </div>
+          </div>
+
+          <div class="stage-wrap">
+            <div class="stage-poster" id="stagePoster">
+              <div class="deco" id="posterDeco"></div>
+              <div class="poem" id="poemText" contenteditable="true" spellcheck="false"></div>
+              <div class="author" id="authorText" contenteditable="true" spellcheck="false"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===================== TEXT -> PDF ===================== -->
+    <section class="panel" id="panel-textpdf">
+      <div class="two-col">
+        <div class="controls">
+          <h4>শিরোনাম</h4>
+          <div class="field"><input type="text" id="docTitle" placeholder="যেমন: আমার ডায়েরি"></div>
+
+          <h4>লেখা</h4>
+          <div class="field"><textarea id="docBody" placeholder="এখানে লিখুন... (একাধিক পৃষ্ঠা হলে স্বয়ংক্রিয়ভাবে পৃষ্ঠা তৈরি হবে)" style="min-height:220px;"></textarea></div>
+
+          <h4>স্টাইল থিম</h4>
+          <div class="field"><select id="docTheme"></select></div>
+
+          <div class="btn-row">
+            <button class="btn gold" id="generateTextPdf">PDF তৈরি করুন</button>
+          </div>
+        </div>
+
+        <div class="doc-preview-wrap">
+          <div id="docPreview">
+            <h2>শিরোনাম</h2>
+            <div class="rule"></div>
+            <div class="body-text">এখানে আপনার লেখা দেখাবে...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== IMAGE -> PDF ===================== -->
+    <section class="panel" id="panel-imgpdf">
+      <div class="two-col">
+        <div class="controls">
+          <h4>ছবি যোগ করুন</h4>
+          <div class="upload-drop" id="imgDrop">ক্লিক করে ছবি বাছাই করুন (একাধিক)</div>
+          <input type="file" id="imgInput" accept="image/*" multiple style="display:none;">
+          <div class="img-list" id="imgList"></div>
+
+          <h4 style="margin-top:18px;">পেজ সেটিংস</h4>
+          <div class="field">
+            <label style="font-size:12px;opacity:0.6;">পেজ সাইজ</label>
+            <select id="imgPageSize">
+              <option value="a4">A4</option>
+              <option value="letter">Letter</option>
+            </select>
+          </div>
+          <div class="field">
+            <label style="font-size:12px;opacity:0.6;">অভিমুখ</label>
+            <select id="imgOrientation">
+              <option value="auto">স্বয়ংক্রিয় (ছবি অনুযায়ী)</option>
+              <option value="p">পোর্ট্রেট</option>
+              <option value="l">ল্যান্ডস্কেপ</option>
+            </select>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn gold" id="generateImgPdf">PDF তৈরি করুন</button>
+          </div>
+        </div>
+
+        <div class="pdf-page-preview">
+          <span class="cap" style="opacity:0.6;">প্রতিটি ছবি একটি করে পৃষ্ঠায় বসবে, একাধিক ছবি হলে একাধিক পৃষ্ঠা তৈরি হবে।</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- CDN libraries: rasterize styled DOM + build PDFs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- Shared factory used by every template file -->
+<script src="js/template-builder.js"></script>
+
+<!-- Each style category lives in its own file -->
+<script src="js/templates/sahitya.js"></script>
+<script src="js/templates/gram.js"></script>
+<script src="js/templates/city.js"></script>
+<script src="js/templates/nature.js"></script>
+<script src="js/templates/romantic.js"></script>
+<script src="js/templates/motivational.js"></script>
+<script src="js/templates/religious.js"></script>
+<script src="js/templates/historical.js"></script>
+<script src="js/templates/index.js"></script>
+
+<script src="js/palettes.js"></script>
+<script src="js/fonts.js"></script>
+<script src="js/pdf-tools.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
